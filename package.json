@@ -1,0 +1,25 @@
+{
+  "name": "bagtagbot",
+  "version": "1.0.0",
+  "description": "discord bot for disc golf bag tags",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/averyrair/bagtagbot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/averyrair/bagtagbot/issues"
+  },
+  "homepage": "https://github.com/averyrair/bagtagbot#readme",
+  "dependencies": {
+    "@discordjs/rest": "^2.2.0",
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.4.5",
+    "mysql2": "^3.9.7"
+  }
+}
