@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { db } = require('../db');
+const sqlActions = require('../sqlActions');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -10,24 +10,33 @@ module.exports = {
                 .setDescription('The name associated with your UDisc account (Full name not handle)')
                 .setRequired(true)),
 	async execute(interaction) {
-        await db.execute(
-            `call registerPlayer(
-                ${db.escape(interaction.user.id)},
-                ${db.escape(interaction.options.getString('name'))}
-            )`
-        );
 
-        let result = await new Promise((resolve, reject) => {
-            db.query(
-                `call getPlayer(
-                    ${db.escape(interaction.user.id)},
-                    null
-                )`,
-            (err, results) => {
-                return err ? reject(err) : resolve(results);
+        const playerName = interaction.options.getString('name');
+        
+        let discordIDResult = await sqlActions.getPlayer(interaction.user.id, null); 
+        if (discordIDResult) {
+            //discord account already associated with player
+            interaction.reply({
+                content: `Account already linked to player ${discordIDResult.playerName}.`,
+                ephemeral: true
             });
-        });
+            return;
+        }
 
-        interaction.reply(`Registered with Tag #${result[0][0].tagNum}`);
+        let playerNameResult = await sqlActions.getPlayer(null, playerName);
+        if (playerNameResult) {
+            //player exists in database
+            sqlActions.register(interaction.user.id, playerName);
+
+            interaction.reply(`Discord account successfully linked to player ${playerName}`)
+        }
+        else {
+            //player does not exist
+            interaction.reply({
+                content: `Player ${playerName} not found.` + 
+                    `If you were given a tag, ask a league admin to add you to the system`,
+                ephemeral: true
+            });
+        }
 	},
 };
