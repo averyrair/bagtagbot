@@ -12,7 +12,7 @@ module.exports = {
 	async execute(interaction) {
 
         const playerName = interaction.options.getString('name');
-        
+    
         let discordIDResult = await sqlActions.getPlayer(interaction.user.id, null); 
         if (discordIDResult) {
             //discord account already associated with player
@@ -22,7 +22,6 @@ module.exports = {
             });
             return;
         }
-
         let playerNameResult = await sqlActions.getPlayer(null, playerName);
         if (playerNameResult) {
             //player exists in database
