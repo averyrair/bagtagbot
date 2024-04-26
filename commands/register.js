@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { db } = require('../db');
+const sqlActions = require('../sqlActions');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -12,18 +12,8 @@ module.exports = {
 	async execute(interaction) {
 
         const playerName = interaction.options.getString('name');
-        
-        let discordIDResult = await new Promise((resolve, reject) => {
-            db.query(
-                `call getPlayer(
-                    ${db.escape(interaction.user.id)},
-                    null
-                )`,
-            (err, results) => {
-                return err ? reject(err) : resolve(results[0][0]);
-            });
-        });
-
+    
+        let discordIDResult = await sqlActions.getPlayer(interaction.user.id, null); 
         if (discordIDResult) {
             //discord account already associated with player
             interaction.reply({
@@ -32,31 +22,17 @@ module.exports = {
             });
             return;
         }
-
-        let playerNameResult = await new Promise((resolve, reject) => {
-            db.query(
-                `call getPlayer(
-                    null,
-                    ${db.escape(playerName)}
-                )`,
-            (err, results) => {
-                return err ? reject(err) : resolve(results[0][0]);
-            });
-        });
-        
+        let playerNameResult = await sqlActions.getPlayer(null, playerName);
         if (playerNameResult) {
             //player exists in database
-            db.query(
-                `call registerDiscord(${db.escape(interaction.user.id)}, 
-                ${db.escape(playerName)})`
-            );
+            sqlActions.register(interaction.user.id, playerName);
 
-            interaction.reply(`Discord account successfully linked to player ${db.escape(playerName)}`)
+            interaction.reply(`Discord account successfully linked to player ${playerName}`)
         }
         else {
             //player does not exist
             interaction.reply({
-                content: `Player ${db.escape(playerName)} not found.` + 
+                content: `Player ${playerName} not found.` + 
                     `If you were given a tag, ask a league admin to add you to the system`,
                 ephemeral: true
             });
