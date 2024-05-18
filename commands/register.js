@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const sqlActions = require('../sqlActions');
+const { updateRoles } = require('../roles');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -28,11 +29,12 @@ module.exports = {
             sqlActions.register(interaction.user.id, playerName);
 
             interaction.reply(`Discord account successfully linked to player ${playerName}`)
+            updateRoles();
         }
         else {
             //player does not exist
             interaction.reply({
-                content: `Player ${playerName} not found.` + 
+                content: `Player ${playerName} not found. ` + 
                     `If you were given a tag, ask a league admin to add you to the system`,
                 ephemeral: true
             });
