@@ -1,19 +1,20 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { getTagNum } = require('../sqlActions');
+const { updateRoles } = require('../roles');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-        .setName('revokeTag')
+        .setName('revoketag')
         .setDescription('Takes a tag out of circulation')
         .addIntegerOption(option =>
-            option.setName('tagNumber')
+            option.setName('number')
             .setDescription('The tag number to reclaim.')
             .setRequired(true)
             .setMinValue(1)
             .setMaxValue(50)
         ),
 	async execute(interaction) {
-        const tagNum = interaction.options.getInteger('tagNumber');
+        const tagNum = interaction.options.getInteger('number');
         const tagInfo = await getTagNum(tagNum);
         if (!tagInfo) {
             interaction.reply({
@@ -24,5 +25,6 @@ module.exports = {
         }
         revokeTag(tagNum);
         interaction.reply(`Tag #${tagNum} removed.\n${tagInfo.playerName} no longer has a tag.`);
+        updateRoles();
 	},
 };

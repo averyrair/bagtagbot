@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const sqlActions = require('../sqlActions');
+const { updateRoles } = require('../roles');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -28,6 +29,7 @@ module.exports = {
             sqlActions.register(interaction.user.id, playerName);
 
             interaction.reply(`Discord account successfully linked to player ${playerName}`)
+            updateRoles();
         }
         else {
             //player does not exist

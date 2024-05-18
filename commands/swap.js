@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { getTagNum, getPlayer, swapTags } = require('../sqlActions');
+const { updateRoles } = require('../roles');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -30,5 +31,6 @@ module.exports = {
             `Tags Swapped!\n${playerInfo.playerName} now has tag #${tagNum}.\n` +
             `${tagInfo.playerName} now has tag #${currTagNum}`
         );
+        updateRoles();
 	},
 };

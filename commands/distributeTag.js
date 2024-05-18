@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 const sqlActions = require('../sqlActions');
+const { updateRoles } = require('../roles');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -14,7 +15,7 @@ module.exports = {
             .setRequired(true)
         )
         .addIntegerOption(option => 
-            option.setName('tagNumber')
+            option.setName('number')
             .setDescription('The tag number to give out')
             .setRequired(true)
             .setMinValue(1)
@@ -23,7 +24,7 @@ module.exports = {
 	async execute(interaction) {
         
         const playerName = interaction.options.getString('name');
-        const tagNum = interaction.options.getInteger('tagNumber')
+        const tagNum = interaction.options.getInteger('number')
         let result = await sqlActions.getPlayer(null, playerName);
 
         if (result) {
@@ -38,6 +39,7 @@ module.exports = {
         result = await sqlActions.getPlayer(null, playerName);
         if (result) {
             interaction.reply(`Tag #${result.tagNum} given to ${result.playerName}`)
+            updateRoles();
         }
         else {
             interaction.reply({content: 'something went wrong...', ephemeral: true})
