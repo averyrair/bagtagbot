@@ -7,6 +7,7 @@ module.exports = {
     getLeaderboard,
     getTagNum,
     swapTags,
+    revokeTag,
 }
 
 async function getPlayer (discordID, playerName) {
@@ -55,5 +56,9 @@ async function getTagNum(num) {
 }
 
 async function swapTags(tag1, tag2) {
-    db.query(`call swapTags(${tag1}, ${tag2})`);
+    db.query(`call swapTags(${db.escape(tag1)}, ${db.escape(tag2)})`);
+}
+
+async function revokeTag(tagNum) {
+    db.query(`call revokeTag(${db.escape(tagNum)})`);
 }
