@@ -12,10 +12,18 @@ module.exports = {
                 'This should match the full name associated with their UDisc account'
             )
             .setRequired(true)
+        )
+        .addIntegerOption(option => 
+            option.setName('tagNumber')
+            .setDescription('The tag number to give out')
+            .setRequired(true)
+            .setMinValue(1)
+            .setMaxValue(50)
         ),
 	async execute(interaction) {
         
         const playerName = interaction.options.getString('name');
+        const tagNum = interaction.options.getInteger('tagNumber')
         let result = await sqlActions.getPlayer(null, playerName);
 
         if (result) {
@@ -26,7 +34,7 @@ module.exports = {
             return;
         }
 
-        sqlActions.distributeTag(playerName);
+        sqlActions.distributeTag(playerName, tagNum);
         result = await sqlActions.getPlayer(null, playerName);
         if (result) {
             interaction.reply(`Tag #${result.tagNum} given to ${result.playerName}`)
