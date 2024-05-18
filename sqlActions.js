@@ -4,6 +4,9 @@ module.exports = {
     getPlayer,
     register,
     distributeTag,
+    getLeaderboard,
+    getTagNum,
+    swapTags,
 }
 
 async function getPlayer (discordID, playerName) {
@@ -28,5 +31,29 @@ async function register (discordID, playerName) {
 }
 
 async function distributeTag (playerName) {
-    db.execute(`call distributeTag(${db.escape(playerName)})`)
+    db.query(`call distributeTag(${db.escape(playerName)})`);
+}
+
+async function getLeaderboard() {
+    return await new Promise((resolve, reject) => {
+        db.query(
+            `call getLeaderboard()`,
+        (err, results) => {
+            return err ? reject(err) : resolve(results[0]);
+        });
+    });
+}
+
+async function getTagNum(num) {
+    return await new Promise((resolve, reject) => {
+        db.query(
+            `call getTagNumber(${db.escape(num)})`,
+        (err, results) => {
+            return err ? reject(err) : resolve(results[0][0]);
+        });
+    });
+}
+
+async function swapTags(tag1, tag2) {
+    db.query(`call swapTags(${tag1}, ${tag2})`);
 }
