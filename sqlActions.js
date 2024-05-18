@@ -31,8 +31,8 @@ async function register (discordID, playerName) {
     );
 }
 
-async function distributeTag (playerName) {
-    db.query(`call distributeTag(${db.escape(playerName)})`);
+async function distributeTag (playerName, tagNumber) {
+    db.query(`call distributeTag(${db.escape(playerName)}, ${db.escape(tagNumber)})`);
 }
 
 async function getLeaderboard() {

@@ -34,6 +34,14 @@ module.exports = {
             });
             return;
         }
+        result = await sqlActions.getTagNum(tagNum);
+        if (result && result.playerName != 'not in circulation') {
+            interaction.reply({
+                content: `${result.playerName} already has tag #${result.tagNum}`,
+                ephemeral: true
+            });
+            return;
+        }
 
         sqlActions.distributeTag(playerName, tagNum);
         result = await sqlActions.getPlayer(null, playerName);

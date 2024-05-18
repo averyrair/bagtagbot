@@ -34,7 +34,7 @@ module.exports = {
         else {
             //player does not exist
             interaction.reply({
-                content: `Player ${playerName} not found.` + 
+                content: `Player ${playerName} not found. ` + 
                     `If you were given a tag, ask a league admin to add you to the system`,
                 ephemeral: true
             });

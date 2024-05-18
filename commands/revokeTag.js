@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { getTagNum } = require('../sqlActions');
+const { getTagNum, revokeTag } = require('../sqlActions');
 const { updateRoles } = require('../roles');
 
 module.exports = {
